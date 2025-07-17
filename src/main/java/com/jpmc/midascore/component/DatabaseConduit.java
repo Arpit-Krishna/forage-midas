@@ -12,6 +12,10 @@ public class DatabaseConduit {
         this.userRepository = userRepository;
     }
 
+    public UserRecord findByName(String name) {
+        return userRepository.findByName(name);
+    }
+
     public void save(UserRecord userRecord) {
         userRepository.save(userRecord);
     }
