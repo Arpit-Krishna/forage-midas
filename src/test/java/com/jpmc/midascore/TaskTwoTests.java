@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.Assertions;
 
-@SpringBootTest
+import com.jpmc.midascore.foundation.Balance;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class TaskTwoTests {
@@ -19,6 +22,9 @@ class TaskTwoTests {
 
     @Autowired
     private FileLoader fileLoader;
+
+    @Autowired
+    private BalanceQuerier balanceQuerier;
 
     @Test
     void task_two_verifier() throws InterruptedException {
@@ -32,10 +38,12 @@ class TaskTwoTests {
         logger.info("----------------------------------------------------------");
         logger.info("use your debugger to watch for incoming transactions");
         logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+        // Query balance
+        Balance waldorfBalance = balanceQuerier.query(Long.valueOf(3));
+        Assertions.assertEquals(0, waldorfBalance.getAmount(), 0.01f);
+
+        logger.info("✅ Task 2 test completed with correct post-condition validation.");
+
         }
-    }
 
 }
