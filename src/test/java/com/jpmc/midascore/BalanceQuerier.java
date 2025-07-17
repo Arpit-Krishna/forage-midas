@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class BalanceQuerier {
     private final RestTemplate restTemplate;
+        
 
     public BalanceQuerier(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();

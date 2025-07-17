@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.Assertions;
+
+
+import com.jpmc.midascore.foundation.Balance;
 
 @SpringBootTest
 @DirtiesContext
@@ -23,6 +27,9 @@ public class TaskThreeTests {
     @Autowired
     private FileLoader fileLoader;
 
+    @Autowired
+    private BalanceQuerier balanceQuerier;
+
     @Test
     void task_three_verifier() throws InterruptedException {
         userPopulator.populate();
@@ -38,9 +45,19 @@ public class TaskThreeTests {
         logger.info("----------------------------------------------------------");
         logger.info("use your debugger to find out what waldorf's balance is after all transactions are processed");
         logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
-        }
+
+        Thread.sleep(3000);
+        Long waldorfUserId = 1234L; 
+
+        Balance waldorfBalance = balanceQuerier.query(waldorfUserId);
+        logger.info("Waldorf's balance: {}", waldorfBalance.getAmount());
+        
+        double expectedBalance = 1000.0; 
+
+        Assertions.assertEquals(expectedBalance, waldorfBalance.getAmount(), 0.01, "Waldorf's balance mismatch after processing transactions.");
+        // while (true) {
+        //     Thread.sleep(20000);
+        //     logger.info("...");
+        // }
     }
 }
